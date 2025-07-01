@@ -21,7 +21,7 @@ const __dirname = path.dirname(__filename);
 export let swaggerDocument;
 try {
   swaggerDocument = JSON.parse(
-    fs.readFileSync(path.join(__dirname, '../docs/swagger-output.json'), 'utf8')
+    fs.readFileSync(path.join(__dirname, '../../docs/swagger-output.json'), 'utf8')
   );
 } catch (error) {
   logger.warn('Swagger documentation not found or invalid. API docs will not be available.', {

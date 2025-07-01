@@ -5,7 +5,6 @@ import compression from 'compression';
 import xss from 'xss-clean';
 import hpp from 'hpp';
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 import { httpError } from './utils/httpError.js';
 import globalErrorHandler from './middlewares/globalErrorHandler.js';
@@ -20,6 +19,8 @@ import jobsRoutes from './routes/jobsRoutes.js';
 import webhookRoutes from './routes/webhookRoutes.js';
 
 const server = express();
+
+server.use(correlationIdMiddleware);
 
 server.use(helmet());
 
@@ -63,6 +64,12 @@ server.use(cors(corsOptions));
 
 server.use(metricsMiddleware);
 
+// Prometheus metrics endpoint
+// server.get('/metrics', async (req, res) => {
+//   res.set('Content-Type', register.contentType);
+//   res.end(await register.metrics());
+// });
+
 server.use(
   '/api-docs',
   swaggerUi.serve,
@@ -76,14 +83,6 @@ server.use(
     }
   })
 );
-
-// Prometheus metrics endpoint
-// server.get('/metrics', async (req, res) => {
-//   res.set('Content-Type', register.contentType);
-//   res.end(await register.metrics());
-// });
-
-server.use(correlationIdMiddleware);
 
 server.get('/swagger.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');

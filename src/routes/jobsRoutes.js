@@ -6,7 +6,7 @@ import {
 
 const router = express.Router();
 
-router.post('/', postJob);
+router.post('/post', postJob);
 
 router.get('/:requestId', getJob);
 

@@ -1,18 +1,17 @@
 import { Job } from '../models/jobsModel.js';
 
 export const findJobById = async (requestId) => {
-  Job.findById(requestId);
+  Job.findOne({ jobId: requestId });
 };
 
 export const updateJob = async (requestId, updates) => {
-  Job.findByIdAndUpdate(requestId, { ...updates, updatedAt: new Date() }, { new: true });
+  Job.findOneAndUpdate({ jobId: requestId }, { ...updates, updatedAt: new Date() }, { new: true });
 };
 
 export const createJob = async (requestId, payload) => {
-  const newJob = new Job({
-    _id: requestId,
+  Job.create({
+    jobId: requestId,
     payload,
     status: 'pending'
   });
-  return newJob.save();
 };
