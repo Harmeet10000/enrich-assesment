@@ -4,7 +4,6 @@ import { logger } from '../utils/logger.js';
 export const postVendorWebhook = async (req, res) => {
   try {
     const { vendor } = req.params;
-    // Assuming the webhook payload contains a 'request_id' and 'final_data'
     const { request_id, final_data } = req.body;
 
     if (!request_id || !final_data) {
