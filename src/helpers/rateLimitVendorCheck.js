@@ -36,7 +36,7 @@ redisClient.defineCommand('rateLimitCheck', {
 
 export const canCallVendor = async (vendorName) => {
   const { max, duration } = config.vendorRateLimits[vendorName] || { max: 1, duration: 1000 };
-  const windowStart = Math.floor(Date.now() / duration) * duration; // Current window timestamp
+  const windowStart = Math.floor(Date.now() / duration) * duration;
   const key = `rate_limit:${vendorName}:${windowStart}`;
   const expirySeconds = Math.ceil(duration / 1000); // Convert duration to seconds for Redis TTL
 
