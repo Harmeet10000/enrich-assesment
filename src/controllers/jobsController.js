@@ -24,11 +24,15 @@ export const getJob = catchAsync(async (req, res) => {
     return httpResponse(req, res, 404, 'Job not found');
   }
 
-  if (job.status === 'complete') {
-    return httpResponse(req, res, 200, 'Job complete', { status: job.status, result: job.result });
-  } else if (job.status === 'failed') {
-    return httpResponse(req, res, 200, 'Job failed', { status: job.status, error: job.error });
-  } else {
-    return httpResponse(req, res, 200, 'Job status', { status: job.status });
+  switch (job.status) {
+    case 'complete':
+      return httpResponse(req, res, 200, 'Job complete', {
+        status: job.status,
+        result: job.result
+      });
+    case 'failed':
+      return httpResponse(req, res, 200, 'Job failed', { status: job.status, error: job.error });
+    default:
+      return httpResponse(req, res, 200, 'Job status', { status: job.status });
   }
 });
