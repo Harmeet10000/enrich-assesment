@@ -1,14 +1,6 @@
-// src/controllers/webhook.controller.js
-// Handles incoming webhooks from mock vendors.
-
 import * as jobService from '../services/jobsService.js';
 import { logger } from '../utils/logger.js';
 
-/**
- * Handles POST /vendor-webhook/:vendor request to process final data from async vendors.
- * @param {object} req - Express request object.
- * @param {object} res - Express response object.
- */
 export const postVendorWebhook = async (req, res) => {
   try {
     const { vendor } = req.params;
