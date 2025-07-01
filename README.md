@@ -1,302 +1,275 @@
-# 🔐 Production-Grade Authentication Template
+# 🚦 API Gateway for External Data Vendors
 
-<div align="center">
-  <!-- Core Technologies -->
-  <img src="https://img.shields.io/badge/node.js-22.14.0-brightgreen" alt="Node.js Version" />
-  <img src="https://img.shields.io/badge/express-4.21.2-blue" alt="Express Version" />
-  <img src="https://img.shields.io/badge/mongoose-8.10.1-green" alt="MongoDB" />
-  <img src="https://img.shields.io/badge/ioredis-5.6.1-red" alt="Redis" />
-  <br/>
-  <img src="https://img.shields.io/badge/docker-ready-blue" alt="Docker Ready" />
-  <img src="https://img.shields.io/badge/license-ISC-lightgrey" alt="License" />
-</div>
+A robust, scalable API Gateway that abstracts the complexities of integrating with multiple external data vendors. It provides unified endpoints, background job processing, distributed rate limiting, and a clean architecture for maintainability and extensibility.
 
-<div align="center">
-  <h3>Key Dependencies</h3>
-  <img src="https://img.shields.io/badge/typescript-types-blue" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/winston-3.17.0-orange" alt="Winston" />
-  <img src="https://img.shields.io/badge/joi-17.13.3-yellow" alt="Joi" />
-  <br/>
-  <img src="https://img.shields.io/badge/swagger--ui--express-5.0.1-green" alt="Swagger UI" />
-  <img src="https://img.shields.io-badge/helmet-8.0.0-lightgrey" alt="Helmet" />
-  <img src="https://img.shields.io/badge/cors-2.8.5-orange" alt="CORS" />
-  <br/>
-  <img src="https://img.shields.io/badge/amqplib-0.10.7-purple" alt="RabbitMQ" />
-  <img src="https://img.shields.io/badge/aws--sdk-3.797.0-yellow" alt="AWS SDK" />
-  <img src="https://img.shields.io/badge/jsonwebtoken-9.0.2-blue" alt="JWT" />
-  <br/>
-  <img src="https://img.shields.io/badge/compression-1.8.0-lightgrey" alt="Compression" />
-  <img src="https://img.shields.io/badge/prom--client-15.1.3-orange" alt="Prometheus" />
-</div>
-
-<div align="center">
-  <h3>Development Tools</h3>
-  <img src="https://img.shields.io/badge/eslint-9.24.0-purple" alt="ESLint" />
-  <img src="https://img.shields.io/badge/prettier-3.5.2-pink" alt="Prettier" />
-  <img src="https://img.shields.io/badge/husky-9.1.7-brown" alt="Husky" />
-  <br/>
-  <img src="https://img.shields.io/badge/nodemon-3.1.9-green" alt="Nodemon" />
-  <img src="https://img.shields.io/badge/webpack--cli-6.0.1-blue" alt="Webpack" />
-  <img src="https://img.shields.io/badge/commitlint-19.7.1-orange" alt="Commitlint" />
-</div>
-
-<p align="center">A robust, secure, and scalable authentication service template built with Node.js, Express, MongoDB, and Redis.</p>
-
-<details open>
-<summary>📑 Table of Contents</summary>
-
-- [✨ Features](#-features)
-- [📋 Prerequisites](#-prerequisites)
-- [🚀 Getting Started](#-getting-started)
-- [📊 Project Structure](#-project-structure)
-- [⚙️ Configuration](#️-configuration)
-- [🛠️ Available Scripts](#️-available-scripts)
-- [🔒 Security Features](#-security-features)
-- [🧪 Testing](#-testing)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-
-</details>
+---
 
 ## ✨ Features
 
-<details open>
-<summary><b>🔑 Complete Authentication System</b></summary>
-<br/>
+- **Unified Job Submission**: `POST /jobs` accepts any JSON payload and returns a `request_id` for tracking.
+- **Background Processing**: Jobs are queued and processed asynchronously, supporting both synchronous and asynchronous vendor integrations.
+- **Webhook Support**: Dedicated endpoint for async vendors to push final data and mark jobs as complete.
+- **Job Status Polling**: `GET /jobs/{request_id}` allows clients to poll for job status and results.
+- **Distributed Rate Limiting**: Per-vendor rate limits enforced via Redis-backed mechanisms.
+- **Clean Architecture**: Separation of concerns across routes, controllers, services, repository, helpers, and db layers.
+- **Scalable & Reliable**: Built with Node.js, BullMQ (Redis-backed), and MongoDB for high throughput and resilience.
 
-- ✅ User registration with email verification
-- ✅ Login with JWT (access and refresh tokens)
-- ✅ Secure password reset flow
-- ✅ Account confirmation mechanism
-- ✅ Session management with Redis
-- ✅ Secure password handling with bcrypt
-- ✅ Refresh token rotation
+---
 
-</details>
+## 🏗️ Architecture Overview
 
-<details open>
-<summary><b>🛡️ Security First Approach</b></summary>
-<br/>
-
-- ✅ CORS protection with configurable origins
-- ✅ Helmet security headers
-- ✅ Intelligent rate limiting
-- ✅ MongoDB sanitization against NoSQL injection
-- ✅ XSS protection with input sanitization
-- ✅ Secure HTTP-only cookies
-- ✅ Comprehensive input validation with Joi
-- ✅ Content security policies
-
-</details>
-
-<details open>
-<summary><b>🏭 Production Ready</b></summary>
-<br/>
-
-- ✅ Dockerized deployment with separate dev/prod configs
-- ✅ Webpack bundling for optimized builds
-- ✅ Environment-specific configurations
-- ✅ Comprehensive error handling
-- ✅ API documentation with Swagger
-- ✅ Structured logging system
-- ✅ Health check endpoints
-- ✅ Database backup to S3
-- ✅ Response compression
-- ✅ RabbitMQ integration for microservice communication
-
-</details>
-
-<details open>
-<summary><b>👨‍💻 Developer Experience</b></summary>
-<br/>
-
-- ✅ Hot reloading in development
-- ✅ Code linting and formatting with ESLint and Prettier
-- ✅ Git hooks with Husky
-- ✅ Comprehensive test suite
-- ✅ Conventional commit messages
-- ✅ Clear project structure
-- ✅ Utility scripts for common tasks
-
-</details>
-
-## 📋 Prerequisites
-
-<table>
-  <tr>
-    <td>Node.js</td>
-    <td>≥ 22.14.0</td>
-  </tr>
-  <tr>
-    <td>npm</td>
-    <td>≥ 10.7.0</td>
-  </tr>
-  <tr>
-    <td>MongoDB</td>
-    <td>Latest</td>
-  </tr>
-  <tr>
-    <td>Redis</td>
-    <td>Latest</td>
-  </tr>
-  <tr>
-    <td>Docker</td>
-    <td>Optional for containerized deployment</td>
-  </tr>
-</table>
-
-## 🚀 Getting Started
-
-<details open>
-<summary><b>⬇️ Installation</b></summary>
-<br/>
-
-1. **Clone the repository**
-
-```bash
-git clone https://github.com/yourusername/production-grade-auth-template.git
-cd production-grade-auth-template/backend
+```
++------------------+     +-----------------+     +-----------------+
+|                  |     |                 |     |                 |
+|   Frontend/      +----->  API Gateway    +----->  BullMQ Queue   |
+|   Internal Teams |     |  (Express.js)   |     |  (Redis-backed) |
+|                  |     |                 |     |                 |
++------------------+     +--------+--------+     +--------+--------+
+      ^                         |                         |
+      |                         |                         |
+      | (Polling)               | (Job Creation)          | (Job Consumption)
+      |                         |                         |
+      |                         v                         v
++-----+------------+     +-----------------+     +-----------------+
+|                  |     |                 |     |                 |
+|  MongoDB         <-----+  Job Repository |<----+  Background     |
+|  (Job State)     |     |  (Mongoose)     |     |  Worker (BullMQ)|
+|                  |     |                 |     |                 |
++------------------+     +-----------------+     +--------+--------+
+                                                          |
+                                                          | (Vendor Calls, Rate Limit)
+                                                          v
+                                                  +-----------------+
+                                                  |                 |
+                                                  | Mock Vendors    |
+                                                  | (Sync / Async)  |
+                                                  |                 |
+                                                  +--------+--------+
+                                                           ^
+                                                           | (Webhook for Async)
+                                                           |
+                                                  +--------+--------+
+                                                  |                 |
+                                                  | Vendor Webhook  |
+                                                  | (Express.js)    |
+                                                  |                 |
+                                                  +-----------------+
 ```
 
-2. **Install dependencies**
+---
+
+## ⚖️ Key Design Decisions & Trade-offs
+
+- **Node.js**: Chosen for its async, event-driven model—ideal for I/O-bound API gateway workloads.
+- **BullMQ (Redis-backed)**: Native Node.js integration, built-in job management, and distributed rate limiting. Relies on Redis, which is fast but a critical dependency.
+- **Redis for Rate Limiting**: Ensures consistent per-vendor limits across horizontally scaled workers.
+- **MongoDB**: Flexible NoSQL store for diverse job payloads and evolving schemas.
+- **Functional Programming Style**: Promotes modularity, testability, and maintainability.
+- **Separation of Concerns**: Clear folder structure for scalability and clarity.
+- **Webhook for Async Vendors**: Enables push-based completion for long-running vendor jobs.
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js (v18+ recommended)
+- npm
+- MongoDB (running)
+- Redis (running)
+
+### Installation
 
 ```bash
+git clone <repository_url>
+cd api-gateway
+cp .env.example .env
+# Edit .env as needed (MongoDB/Redis connection details)
 npm install
 ```
 
-3. **Set up environment variables**
+### Configuration
 
-Create a `.env.development` file in the root directory with the following variables:
+Edit your `.env` file as needed:
 
 ```env
-# Server
-NODE_ENV=development
 PORT=3000
-SERVER_URL=http://localhost:3000
-
-# Database
-DATABASE_URL=mongodb://localhost:27017/auth-service
-REDIS_URL=redis://localhost:6379
-
-# JWT
-ACCESS_TOKEN_SECRET=your_access_token_secret
-REFRESH_TOKEN_SECRET=your_refresh_token_secret
-ACCESS_TOKEN_EXPIRY=900
-REFRESH_TOKEN_EXPIRY=604800
-
-# Email
-EMAIL_HOST=smtp.example.com
-EMAIL_PORT=587
-EMAIL_USER=your_email@example.com
-EMAIL_PASSWORD=your_email_password
-EMAIL_FROM=noreply@yourservice.com
-
-# Frontend
-FRONTEND_URL=http://localhost:5173
-
-# Backup Configuration
-S3_BACKUP_ENABLED=true
-S3_BUCKET_NAME=your-backup-bucket
-AWS_REGION=us-east-1
-S3_PREFIX=mongodb-backups/
+MONGO_URI=mongodb://localhost:27017/api_gateway_db
+REDIS_HOST=localhost
+REDIS_PORT=6379
 ```
 
-</details>
+---
 
-<details>
-<summary><b>▶️ Running the Application</b></summary>
-<br/>
+## 🏃 Running the Application
 
-#### Development Mode
+The system consists of two main processes: the API server and the background worker. Run each in a separate terminal.
 
-```bash
-npm run dev
-```
-
-#### Production Build
+**Start the API Server:**
 
 ```bash
-npm run build
 npm start
 ```
 
-</details>
-
-<details>
-<summary><b>🐳 Docker Deployment</b></summary>
-<br/>
-
-#### Development
+**Start the Background Worker:**
 
 ```bash
-docker build -t auth-service-dev -f docker/dev/Dockerfile .
-docker run -p 3000:3000 --env-file .env.development auth-service-dev
+npm run worker
 ```
 
-#### Production
+You can run multiple worker instances for horizontal scaling.
+
+---
+
+## 📚 API Endpoints
+
+### 1. Create a New Job
+
+**POST `/jobs`**
+
+Accepts a vendor payload and returns a `request_id`.
+
+**Example (Sync Vendor):**
 
 ```bash
-docker build -t auth-service-prod -f docker/prod/Dockerfile .
-docker run -p 3000:3000 --env-file .env.production auth-service-prod
+curl -X POST http://localhost:3000/jobs \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "vendorType": "sync",
+    "vendorPayload": {
+      "productId": "PROD-ABC-123",
+      "action": "fetch_details"
+    }
+  }'
 ```
 
-</details>
+**Example (Async Vendor):**
 
-<details>
-<summary><b>📝 API Documentation</b></summary>
-<br/>
+```bash
+curl -X POST http://localhost:3000/jobs \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "vendorType": "async",
+    "vendorPayload": {
+      "userId": "USER-XYZ-456",
+      "reportType": "monthly_sales"
+    }
+  }'
+```
 
-Once the server is running, access the Swagger documentation at:
+**Response:**
+
+```json
+{ "request_id": "your-generated-uuid" }
+```
+
+---
+
+### 2. Get Job Status
+
+**GET `/jobs/{request_id}`**
+
+Poll for job status and results.
+
+```bash
+curl -X GET http://localhost:3000/jobs/your-generated-uuid
+```
+
+**Possible Responses:**
+
+- **Pending/Processing:**
+  ```json
+  { "status": "pending" }
+  ```
+  or
+  ```json
+  { "status": "processing" }
+  ```
+
+- **Complete:**
+  ```json
+  {
+    "status": "complete",
+    "result": {
+      "status": "success",
+      "vendor": "syncVendor",
+      "data": "Processed sync data for PROD-ABC-123",
+      "timestamp": "2023-10-27T10:00:00.000Z",
+      "originalPayload": { "productId": "PROD-ABC-123", "action": "fetch_details" }
+    }
+  }
+  ```
+
+- **Failed:**
+  ```json
+  { "status": "failed", "error": "Error message details" }
+  ```
+
+- **Not Found:**
+  ```json
+  { "message": "Job not found" }
+  ```
+
+---
+
+## 📈 Load Testing with k6
+
+A `k6_load_test.js` script is included for performance/load testing.
+
+### How to Run
+
+1. [Install k6](https://k6.io/docs/getting-started/installation/)
+2. Ensure both API server and worker are running.
+3. Run the test:
+
+```bash
+k6 run k6_load_test.js
+```
+
+### Script Highlights
+
+- Simulates a mix of `POST /jobs` and `GET /jobs/{request_id}` requests.
+- 200 concurrent virtual users for 60 seconds.
+- Checks for latency, error rates, and endpoint correctness.
+
+---
+
+## 📊 Load Test Results & Analysis
+
+- **POST /jobs**: Should have low latency (<50ms), confirming fast job offloading.
+- **GET /jobs/{request_id}**: Slightly higher latency due to DB lookups, but should remain performant.
+- **Error Rates**: Should be <1%. Higher rates indicate infrastructure or code issues.
+- **Rate Limiting**: Worker logs should show rate limit enforcement and job re-queuing.
+- **Scalability**: Multiple workers distribute jobs, demonstrating horizontal scaling.
+
+---
+
+## 🗂️ Project Structure
 
 ```
-http://localhost:3000/api-docs
+api-gateway/
+├── src/
+│   ├── routes/
+│   ├── controllers/
+│   ├── services/
+│   ├── repository/
+│   ├── helpers/
+│   ├── db/
+│   └── ...
+├── k6_load_test.js
+├── .env.example
+└── ...
 ```
 
-</details>
 
-## 📊 Project Structure
 
-<details open>
-<summary><b>🗂️ Folder Organization</b></summary>
 
-```
-backend/
-├── docker/                # Docker configuration files
-│   ├── dev/               # Development Docker setup
-│   └── prod/              # Production Docker setup
-├── docs/                  # API documentation
-│   ├── swagger-output.json
-│   └── swagger.js
-├── logs/                  # Application logs
-├── nginx/                 # Nginx configuration for deployment
-│   ├── http.conf
-│   └── https.conf
-├── scripts/               # Utility scripts
-│   ├── cron.sh
-│   ├── dbBackup.js
-│   └── docker.sh
-├── src/                   # Source code
-│   ├── config/            # Configuration files
-│   ├── constant/          # Constants and enums
-│   ├── controllers/       # Request handlers
-│   ├── db/                # Database connection modules
-│   ├── helpers/           # Helper utilities
-│   ├── middlewares/       # Express middlewares
-│   ├── models/            # Mongoose models
-│   ├── repository/        # Data access layer
-│   ├── routes/            # API routes
-│   ├── services/          # Business logic layer
-│   ├── types/             # TypeScript type definitions
-│   ├── utils/             # Utility functions
-│   ├── validations/       # Input validation schemas
-│   ├── app.js             # Express application setup
-│   └── index.js           # Application entry point
-└── test/                  # Test files
-    ├── mockData/          # Mock data for tests
-    ├── routes/            # API route tests
-    ├── utils/             # Test utilities
-    └── validations/       # Validation tests
-```
+<div align="center">
+
+**Built with ❤️ for scalable, reliable data integrations.**
+
+</div>
 
 </details>
 
