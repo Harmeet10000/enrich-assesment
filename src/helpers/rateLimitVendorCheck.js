@@ -2,7 +2,6 @@ import { config } from '../config/limits.js';
 import { redisClient } from '../db/connectRedis.js';
 import { logger } from '../utils/logger.js';
 
-// ARGV[2] - Expiration time for the key (duration in seconds)
 const rateLimitLuaScript = `
     local key = KEYS[1]
     local max = tonumber(ARGV[1])
@@ -24,7 +23,6 @@ const rateLimitLuaScript = `
     end
 `;
 
-// Load the Lua script into Redis. This ensures it's available for atomic calls.
 redisClient.defineCommand('rateLimitCheck', {
   numberOfKeys: 1,
   lua: rateLimitLuaScript
@@ -37,7 +35,6 @@ export const canCallVendor = async (vendorName) => {
   const expirySeconds = Math.ceil(duration / 1000); // Convert duration to seconds for Redis TTL
 
   try {
-    // Use the defined Lua script for atomic check and increment
     const result = await redisClient.rateLimitCheck(key, max, expirySeconds);
     return result === 1; // 1 means allowed, 0 means denied
   } catch (error) {

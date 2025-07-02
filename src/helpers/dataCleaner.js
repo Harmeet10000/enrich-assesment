@@ -10,7 +10,6 @@ export const cleanVendorResponse = (vendorData) => {
       if (typeof value === 'string') {
         cleaned[key] = value.trim();
       } else if (typeof value === 'object' && value !== null) {
-        // Recursively clean nested objects
         cleaned[key] = cleanVendorResponse(value);
       } else {
         cleaned[key] = value;
@@ -18,7 +17,6 @@ export const cleanVendorResponse = (vendorData) => {
     }
   }
 
-  // Simulate PII removal (e.g., removing a 'customerEmail' field)
   if (cleaned.customerEmail) {
     delete cleaned.customerEmail;
   }

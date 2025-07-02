@@ -9,7 +9,6 @@ const connectDB = async () => {
 
     logger.info(`MongoDB Connected: ${conn.connection.host}`);
 
-    // Track connection events
     mongoose.connection.on('disconnected', () => {});
 
     mongoose.connection.on('reconnected', () => {

@@ -13,7 +13,7 @@
     "loadtest": "k6 run k6_load_test.js",
     "start": "node dist/index.cjs",
     "swagger": "node ./docs/swagger.js",
-    "test": "node test-runner.js",
+    "test": "node --test --test-reporter=spec",
     "test:watch": "node --watch test-runner.js",
     "test:coverage": "node --test --coverage test-runner.js",
     "lint": "eslint .",
