@@ -24,7 +24,8 @@
     "migrate:dev": "cross-env MIGRATE_MODE=development node script/migration.js",
     "migrate:prod": "cross-env MIGRATE_MODE=production node script/migration.js",
     "backup:start": "node scripts/dbBackup.js",
-    "backup:once": "cross-env RUN_BACKUP_ONCE=true node scripts/dbBackup.js"
+    "backup:once": "cross-env RUN_BACKUP_ONCE=true node scripts/dbBackup.js",
+    "worker": "nodemon src/helpers/jobWorker.js"
   },
   "keywords": [],
   "author": "Harmeet Singh",

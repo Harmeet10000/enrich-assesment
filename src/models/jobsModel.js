@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 const jobSchema = new Schema(
   {
-    jobId: {
+    requestId: {
       type: String,
       required: true
     },

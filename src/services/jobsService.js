@@ -15,7 +15,8 @@ export const createAndQueueJob = async (vendorType, vendorPayload) => {
 };
 
 export const getJobStatus = async (requestId) => {
-  jobRepository.findJobById(requestId);
+  const job = await jobRepository.findJobById(requestId);
+  return job || null;
 };
 
 export const updateJobFromWebhook = async (vendorName, requestId, finalData) => {

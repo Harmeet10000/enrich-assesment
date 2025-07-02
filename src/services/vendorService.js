@@ -29,7 +29,7 @@ export const callSyncVendor = async (requestId, payload) => {
     throw new Error(`Rate limit exceeded for ${vendorName}. Job re-queued.`);
   }
 
-  logger.log(`Calling synchronous vendor for job ${requestId}...`);
+  logger.info(`Calling synchronous vendor for job ${requestId}...`);
   const { min, max } = config.vendorProcessingTimes[vendorName];
   const processingTime = Math.random() * (max - min) + min;
 
@@ -46,7 +46,7 @@ export const callSyncVendor = async (requestId, payload) => {
   };
 
   const cleanedResponse = cleanVendorResponse(rawResponse);
-  logger.log(`Synchronous vendor call for job ${requestId} completed.`);
+  logger.info(`Synchronous vendor call for job ${requestId} completed.`);
   return cleanedResponse;
 };
 
@@ -76,7 +76,7 @@ export const callAsyncVendor = async (requestId, payload) => {
     );
   }
 
-  logger.log(`Calling asynchronous vendor for job ${requestId} (initial ack)...`);
+  logger.info(`Calling asynchronous vendor for job ${requestId} (initial ack)...`);
   const { min, max } = config.vendorProcessingTimes[vendorName];
   const processingTime = Math.random() * (max - min) + min;
 
@@ -103,13 +103,13 @@ export const callAsyncVendor = async (requestId, payload) => {
       timestamp: new Date().toISOString(),
       originalPayload: payload
     };
-    logger.log(`Simulating async vendor webhook for job ${requestId}.`);
+    logger.info(`Simulating async vendor webhook for job ${requestId}.`);
     // Directly call the webhook processing logic (bypassing HTTP for simplicity in mock)
     // In a real system, the mock vendor would make an HTTP POST request to your webhook endpoint.
-    const { updateJobFromWebhook } = await import('./job.service.js'); // Avoid circular dependency
+    const { updateJobFromWebhook } = await import('./jobsService.js');
     try {
       await updateJobFromWebhook(vendorName, requestId, finalData);
-      logger.log(`Simulated webhook for job ${requestId} processed.`);
+      logger.info(`Simulated webhook for job ${requestId} processed.`);
     } catch (webhookError) {
       logger.error(
         `Error processing simulated webhook for job ${requestId}:`,
@@ -119,6 +119,6 @@ export const callAsyncVendor = async (requestId, payload) => {
     }
   }, processingTime);
 
-  logger.log(`Asynchronous vendor initial ack for job ${requestId} completed.`);
+  logger.info(`Asynchronous vendor initial ack for job ${requestId} completed.`);
   return ackResponse;
 };
