@@ -179,15 +179,19 @@ curl -X GET http://localhost:3000/jobs/your-generated-uuid
 **Possible Responses:**
 
 - **Pending/Processing:**
+
   ```json
   { "status": "pending" }
   ```
+
   or
+
   ```json
   { "status": "processing" }
   ```
 
 - **Complete:**
+
   ```json
   {
     "status": "complete",
@@ -202,6 +206,7 @@ curl -X GET http://localhost:3000/jobs/your-generated-uuid
   ```
 
 - **Failed:**
+
   ```json
   { "status": "failed", "error": "Error message details" }
   ```
@@ -261,9 +266,6 @@ api-gateway/
 ├── .env.example
 └── ...
 ```
-
-
-
 
 <div align="center">
 

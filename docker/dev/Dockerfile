@@ -27,6 +27,9 @@ COPY package*.json ./
 # Copy the rest of the application code
 COPY . .
 
+# Copy development environment variables
+COPY .env.dev ./.env.dev
+
 # Exposing Port
 EXPOSE 8000
 

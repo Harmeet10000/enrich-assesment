@@ -6,7 +6,6 @@ import * as jobRepository from '../repository/jobRepository.js';
 
 //To DO list
 /**
- * 1. make use od docker-compose
  * 2. Add rate limiting for each vendor type
  * 3. Add retry logic for failed jobs
  * 4. Implement graceful shutdown for the worker

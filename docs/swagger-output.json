@@ -24,9 +24,7 @@
   "paths": {
     "/api/v1/jobs/post": {
       "post": {
-        "tags": [
-          "Jobs"
-        ],
+        "tags": ["Jobs"],
         "summary": "Create a new job for vendor processing",
         "description": "Accepts a JSON payload, queues it for background processing by an external vendor, and responds instantly with a unique request ID.",
         "requestBody": {
@@ -38,10 +36,7 @@
                 "properties": {
                   "vendorType": {
                     "type": "string",
-                    "enum": [
-                      "sync",
-                      "async"
-                    ],
+                    "enum": ["sync", "async"],
                     "description": "Specifies which type of mock vendor to use (synchronous or asynchronous)."
                   },
                   "vendorPayload": {
@@ -53,10 +48,7 @@
                     }
                   }
                 },
-                "required": [
-                  "vendorType",
-                  "vendorPayload"
-                ]
+                "required": ["vendorType", "vendorPayload"]
               }
             }
           }
@@ -105,9 +97,7 @@
     },
     "/api/v1/jobs/{requestId}": {
       "get": {
-        "tags": [
-          "Jobs"
-        ],
+        "tags": ["Jobs"],
         "summary": "Get job status and result",
         "description": "Retrieves the current status of a job and its result if processing is complete.",
         "parameters": [
@@ -132,12 +122,7 @@
                   "properties": {
                     "status": {
                       "type": "string",
-                      "enum": [
-                        "pending",
-                        "processing",
-                        "complete",
-                        "failed"
-                      ],
+                      "enum": ["pending", "processing", "complete", "failed"],
                       "description": "The current status of the job."
                     },
                     "result": {
@@ -204,9 +189,7 @@
     },
     "/api/v1/vendor-webhook/{vendor}": {
       "post": {
-        "tags": [
-          "Webhooks"
-        ],
+        "tags": ["Webhooks"],
         "summary": "Receive webhook from an asynchronous vendor",
         "description": "Endpoint for external asynchronous vendors to push final processed data back to the API Gateway. **Note: This is internally simulated by the async mock vendor, you typically won't call this manually.**",
         "parameters": [
@@ -245,10 +228,7 @@
                     }
                   }
                 },
-                "required": [
-                  "request_id",
-                  "final_data"
-                ]
+                "required": ["request_id", "final_data"]
               }
             }
           }

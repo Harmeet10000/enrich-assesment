@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - '27018:27017'
+    volumes:
+      - mongo_data:/data/db
+
+  bullmq:
+    image: redis:7.2
+    container_name: bullmq
+    restart: unless-stopped
+    ports:
+      - '6380:6379'
+    volumes:
+      - redis_data:/data
+
+  api-service:
+    image: api-service:latest
+    container_name: api-service-container-dev
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    depends_on:
+      - mongodb
+      - bullmq
+    ports:
+      - '8000:8000'
+    env_file:
+      - .env.dev
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+  redis_data:

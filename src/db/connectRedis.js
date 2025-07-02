@@ -4,9 +4,7 @@ import { logger } from '../utils/logger.js';
 // Export BullMQ-compatible redis options for reuse
 export const redisOptions = {
   host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
-  username: process.env.REDIS_USERNAME,
-  password: process.env.REDIS_PASSWORD
+  port: process.env.REDIS_PORT
 };
 
 export const redisClient = new Redis(redisOptions);

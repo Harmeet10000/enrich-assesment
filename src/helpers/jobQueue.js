@@ -3,15 +3,15 @@ import { redisOptions } from '../db/connectRedis.js';
 import { logger } from '../utils/logger.js';
 
 export const jobQueue = new Queue('processVendorRequest', {
-  connection: redisOptions, // Redis connection details from config
+  connection: redisOptions,
   defaultJobOptions: {
-    attempts: 3, // Retry failed jobs up to 3 times
+    attempts: 4,
     backoff: {
-      type: 'exponential', // Exponential backoff for retries
-      delay: 1000 // 1 second initial delay
+      type: 'exponential',
+      delay: 1000
     },
-    removeOnComplete: true, // Remove job from queue upon successful completion
-    removeOnFail: false // Keep failed jobs for inspection
+    removeOnComplete: true,
+    removeOnFail: false
   }
 });
 

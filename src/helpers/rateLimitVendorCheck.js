@@ -1,7 +1,3 @@
-// Lua script for atomic rate limiting.
-// KEYS[1] - The Redis key for the counter (e.g., 'rate_limit:syncVendor:1700000000')
-// ARGV[1] - Max requests allowed
-
 import { config } from '../config/limits.js';
 import { redisClient } from '../db/connectRedis.js';
 import { logger } from '../utils/logger.js';
