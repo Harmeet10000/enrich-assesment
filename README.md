@@ -1,8 +1,6 @@
-
 # 🚦 Enrich Assignment (API Gateway for External Data Vendors)
 
 Repository: [https://github.com/Harmeet10000/enrich-assesment.git](https://github.com/Harmeet10000/enrich-assesment.git)
-
 
 **Postman Collection:** [View/Import Collection](https://shikshadost.postman.co/workspace/ShikshaDost-Workspace~8e7d6bc8-e595-4500-8ba7-770b152883a6/collection/28263775-c9443c7d-e516-43ff-a3bb-5e9f768e6af3?action=share&creator=28263775)
 
@@ -33,7 +31,6 @@ Transfer/sec:    396.69KB
 **Observation:**
 
 Even after the wrk test finished, logs continued to appear in the API container. This is expected, as jobs submitted during the test are still being processed asynchronously by the background worker(s) managed by BullMQ.
-
 
 ---
 
@@ -117,11 +114,10 @@ Even after the wrk test finished, logs continued to appear in the API container.
 ```bash
 git clone https://github.com/Harmeet10000/enrich-assesment.git
 cd enrich-assesment
-cp .env.dev 
+cp .env.dev
 # Edit .env as needed (MongoDB/Redis connection details)
 npm install
 ```
-
 
 ### Configuration
 
@@ -148,7 +144,6 @@ REDIS_PASSWORD=
 ```
 
 ---
-
 
 ## 🏃 Project Setup & Running with Docker Compose
 
@@ -280,9 +275,6 @@ curl -X GET http://localhost:3000/jobs/your-generated-uuid
 
 ---
 
-
-
-
 ## 🗂️ Project Structure
 
 ```
@@ -299,7 +291,6 @@ api-gateway/
 ├── .env.example
 └── ...
 ```
-
 
 </details>
 
@@ -323,15 +314,14 @@ api-gateway/
 <summary><b>📋 NPM Commands</b></summary>
 <br/>
 
-| Command                 | Description                                  |
-| ----------------------- | -------------------------------------------- |
-| `npm run dev`           | Start the development server with hot reload |
-| `npm run build`         | Build the production bundle                  |
-| `npm start`             | Start the production server                  |
-| `npm test`              | Run the test suite                           |
-| `npm run lint`          | Check code for linting errors                |
-| `npm run format`        | Check code formatting                        |
-
+| Command          | Description                                  |
+| ---------------- | -------------------------------------------- |
+| `npm run dev`    | Start the development server with hot reload |
+| `npm run build`  | Build the production bundle                  |
+| `npm start`      | Start the production server                  |
+| `npm test`       | Run the test suite                           |
+| `npm run lint`   | Check code for linting errors                |
+| `npm run format` | Check code formatting                        |
 
 </details>
 
@@ -349,7 +339,6 @@ api-gateway/
 
 </details>
 
-
 ---
 
 ## 🚧 Further Improvements
@@ -359,4 +348,3 @@ api-gateway/
 - Tune BullMQ worker concurrency and rate limiting based on vendor capabilities
 - Improve Prometheus metrics collection and dashboarding (current setup has limited charts; more custom metrics and Grafana dashboards can be added)
 - Integrate Loki for centralized log aggregation and visualization alongside Grafana
-
