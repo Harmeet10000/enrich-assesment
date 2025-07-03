@@ -1,13 +1,3 @@
-#!/usr/bin/env node
-
-/**
- * Database Backup Script
- *
- * This script creates daily backups of MongoDB database using mongodump
- * It uses node-cron to schedule backups at a specific time each day
- * Backups are stored with timestamps and old backups are automatically cleaned up
- */
-
 import cron from 'node-cron';
 import { exec } from 'child_process';
 import fs from 'fs';

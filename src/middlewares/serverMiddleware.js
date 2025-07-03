@@ -8,7 +8,6 @@ import RedisStore from 'rate-limit-redis';
 import rateLimit from 'express-rate-limit';
 import { redisClient } from '../db/connectRedis.js';
 import promBundle from 'express-prom-bundle';
-// import { register } from 'prom-client';
 
 export const correlationIdMiddleware = (req, res, next) => {
   req.correlationId = nanoid();

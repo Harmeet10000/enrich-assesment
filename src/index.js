@@ -5,10 +5,10 @@ import connectDB from './db/connectDB.js';
 import { connectRedis, redisClient } from './db/connectRedis.js';
 import { logger } from './utils/logger.js';
 import { catchAsync } from './utils/catchAsync.js';
+import '../scripts/bulkJobInserter.js';
 
 Promise.all([connectDB(), connectRedis()])
   .then(() => {
-    // Start job worker with the server
     import('./helpers/jobWorker.js');
 
     const server = app.listen(process.env.PORT, () => {

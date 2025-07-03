@@ -1,4 +1,8 @@
 import { Job } from '../models/jobsModel.js';
+import { pushToList } from '../helpers/redisFunctions.js';
+
+const REDIS_JOB_LIST_KEY = 'pending:jobs';
+const REDIS_JOB_UPDATE_LIST_KEY = 'pending:jobUpdates';
 
 export const findJobById = async (requestId) => {
   const job = await Job.findOne({ requestId });
@@ -6,18 +10,15 @@ export const findJobById = async (requestId) => {
 };
 
 export const updateJob = async (requestId, updates) => {
-  const job = await Job.findOneAndUpdate(
-    { requestId },
-    { ...updates, updatedAt: new Date() },
-    { new: true }
-  );
-  return job;
+  await pushToList('jobUpdate', REDIS_JOB_UPDATE_LIST_KEY, { requestId, updates });
 };
 
 export const createJob = async (requestId, payload) => {
-  await Job.create({
+  const jobData = {
     requestId,
     payload,
-    status: 'pending'
-  });
+    status: 'pending',
+    createdAt: new Date()
+  };
+  await pushToList('job', REDIS_JOB_LIST_KEY, jobData);
 };

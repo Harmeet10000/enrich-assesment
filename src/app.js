@@ -17,6 +17,7 @@ import {
 import healthRoutes from './routes/healthRoutes.js';
 import jobsRoutes from './routes/jobsRoutes.js';
 import webhookRoutes from './routes/webhookRoutes.js';
+import { register } from 'prom-client';
 
 const server = express();
 
@@ -65,10 +66,10 @@ server.use(cors(corsOptions));
 server.use(metricsMiddleware);
 
 // Prometheus metrics endpoint
-// server.get('/metrics', async (req, res) => {
-//   res.set('Content-Type', register.contentType);
-//   res.end(await register.metrics());
-// });
+server.get('/metrics', async (req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.end(await register.metrics());
+});
 
 server.use(
   '/api-docs',

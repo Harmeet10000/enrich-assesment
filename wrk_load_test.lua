@@ -59,3 +59,16 @@ response = function(status, headers, body)
     end
   end
 end
+
+-- wrk -t8 -c200 -d60s -s wrk_load_test.lua http://localhost:8000
+-- Running 1m test @ http://localhost:8000
+--   8 threads and 200 connections
+--   Thread Stats   Avg      Stdev     Max   +/- Stdev
+--     Latency   605.79ms  111.45ms   2.00s    84.28%
+--     Req/Sec    41.15     19.57   170.00     69.48%
+--   18416 requests in 1.00m, 23.27MB read
+--   Socket errors: connect 0, read 0, write 0, timeout 149
+--   Non-2xx or 3xx responses: 172
+-- Requests/sec:    306.63
+-- Transfer/sec:    396.69KB
+-- 5667 documents inserted in mongoDB

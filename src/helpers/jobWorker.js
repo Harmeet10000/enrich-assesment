@@ -1,6 +1,15 @@
-import { Worker } from 'bullmq';
+import { Worker, QueueEvents } from 'bullmq';
 import { logger } from '../utils/logger.js';
 import { redisOptions } from '../db/connectRedis.js';
+import { jobCompleted, jobFailed } from '../metrics/prometheus.js';
+
+const queueEvents = new QueueEvents('processVendorRequest', { connection: redisOptions });
+queueEvents.on('completed', () => {
+  jobCompleted.inc();
+});
+queueEvents.on('failed', () => {
+  jobFailed.inc();
+});
 import { callSyncVendor, callAsyncVendor } from '../services/vendorService.js';
 import * as jobRepository from '../repository/jobRepository.js';
 
@@ -12,11 +21,8 @@ import * as jobRepository from '../repository/jobRepository.js';
  *    - Integrate with Prometheus and Grafana for visualization
  *    - Use BullMQ's `QueueEvents` to listen for job events and expose metrics
  *     via a custom endpoint or middleware
- * 6. Implement job prioritization if needed
- * 8. implement a mechanism to handle job duplicates
- * 9. tuning of BullMQ worker concurrency and rate limiting based on vendor capabilities
+ *
  * 10. Modify readme to include instructions for running the worker
- * 12.caching with redis and use bulk insert for vendor responses
  *
  * **/
 

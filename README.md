@@ -1,6 +1,39 @@
-# 🚦 API Gateway for External Data Vendors
 
-A robust, scalable API Gateway that abstracts the complexities of integrating with multiple external data vendors. It provides unified endpoints, background job processing, distributed rate limiting, and a clean architecture for maintainability and extensibility.
+# 🚦 Enrich Assignment (API Gateway for External Data Vendors)
+
+Repository: [https://github.com/Harmeet10000/enrich-assesment.git](https://github.com/Harmeet10000/enrich-assesment.git)
+
+
+**Postman Collection:** [View/Import Collection](https://shikshadost.postman.co/workspace/ShikshaDost-Workspace~8e7d6bc8-e595-4500-8ba7-770b152883a6/collection/28263775-c9443c7d-e516-43ff-a3bb-5e9f768e6af3?action=share&creator=28263775)
+
+**Load Testing:**
+
+Used [`wrk`](https://github.com/wg/wrk) for high-concurrency load testing. Example command and results:
+
+```bash
+wrk -t8 -c200 -d60s -s wrk_load_test.lua http://localhost:8000
+```
+
+Results:
+
+```
+Running 1m test @ http://localhost:8000
+  8 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   605.79ms  111.45ms   2.00s    84.28%
+    Req/Sec    41.15     19.57   170.00     69.48%
+  18416 requests in 1.00m, 23.27MB read
+  Socket errors: connect 0, read 0, write 0, timeout 149
+  Non-2xx or 3xx responses: 172
+Requests/sec:    306.63
+Transfer/sec:    396.69KB
+5667 documents inserted in mongoDB
+```
+
+**Observation:**
+
+Even after the wrk test finished, logs continued to appear in the API container. This is expected, as jobs submitted during the test are still being processed asynchronously by the background worker(s) managed by BullMQ.
+
 
 ---
 
@@ -74,7 +107,7 @@ A robust, scalable API Gateway that abstracts the complexities of integrating wi
 
 ### Prerequisites
 
-- Node.js (v18+ recommended)
+- Node.js (v22+ recommended)
 - npm
 - MongoDB (running)
 - Redis (running)
@@ -82,43 +115,72 @@ A robust, scalable API Gateway that abstracts the complexities of integrating wi
 ### Installation
 
 ```bash
-git clone <repository_url>
-cd api-gateway
-cp .env.example .env
+git clone https://github.com/Harmeet10000/enrich-assesment.git
+cd enrich-assesment
+cp .env.dev 
 # Edit .env as needed (MongoDB/Redis connection details)
 npm install
 ```
 
+
 ### Configuration
 
-Edit your `.env` file as needed:
+Copy and edit your `.env` file as needed. Example:
 
 ```env
-PORT=3000
-MONGO_URI=mongodb://localhost:27017/api_gateway_db
-REDIS_HOST=localhost
+NODE_ENV=development
+PORT=8000
+SERVER_URL=http://localhost:8000
+
+# Database Configuration
+DATABASE=mongodb://mongodb:27017/api-service
+MIGRATE_MONGO_URI=mongodb://localhost:27018/api-service
+DB_POOL_SIZE=10
+
+# Migration
+MIGRATE_AUTOSYNC=true
+
+# Redis Configuration
+REDIS_HOST=bullmq
 REDIS_PORT=6379
+REDIS_USERNAME=
+REDIS_PASSWORD=
 ```
 
 ---
 
-## 🏃 Running the Application
 
-The system consists of two main processes: the API server and the background worker. Run each in a separate terminal.
+## 🏃 Project Setup & Running with Docker Compose
 
-**Start the API Server:**
+You can pull the prebuilt Docker image and run the entire stack using Docker Compose. No need to run any npm scripts manually.
 
-```bash
-npm start
-```
-
-**Start the Background Worker:**
+**1. Clone the repository:**
 
 ```bash
-npm run worker
+git clone https://github.com/Harmeet10000/enrich-assesment.git
+cd enrich\ assignment
 ```
 
-You can run multiple worker instances for horizontal scaling.
+**2. Copy and edit your .env file:**
+
+```bash
+cp .env.dev .env
+# Edit .env as needed (see above)
+```
+
+**3. Pull the latest Docker image**
+
+```bash
+docker compose pull
+```
+
+**4. Start all services:**
+
+```bash
+docker compose up -d
+```
+
+This will start MongoDB, Redis, the API service, Prometheus, and Grafana. The API and worker are managed together—no need to run `npm run worker`.
 
 ---
 
@@ -218,37 +280,8 @@ curl -X GET http://localhost:3000/jobs/your-generated-uuid
 
 ---
 
-## 📈 Load Testing with k6
 
-A `k6_load_test.js` script is included for performance/load testing.
 
-### How to Run
-
-1. [Install k6](https://k6.io/docs/getting-started/installation/)
-2. Ensure both API server and worker are running.
-3. Run the test:
-
-```bash
-k6 run k6_load_test.js
-```
-
-### Script Highlights
-
-- Simulates a mix of `POST /jobs` and `GET /jobs/{request_id}` requests.
-- 200 concurrent virtual users for 60 seconds.
-- Checks for latency, error rates, and endpoint correctness.
-
----
-
-## 📊 Load Test Results & Analysis
-
-- **POST /jobs**: Should have low latency (<50ms), confirming fast job offloading.
-- **GET /jobs/{request_id}**: Slightly higher latency due to DB lookups, but should remain performant.
-- **Error Rates**: Should be <1%. Higher rates indicate infrastructure or code issues.
-- **Rate Limiting**: Worker logs should show rate limit enforcement and job re-queuing.
-- **Scalability**: Multiple workers distribute jobs, demonstrating horizontal scaling.
-
----
 
 ## 🗂️ Project Structure
 
@@ -267,11 +300,6 @@ api-gateway/
 └── ...
 ```
 
-<div align="center">
-
-**Built with ❤️ for scalable, reliable data integrations.**
-
-</div>
 
 </details>
 
@@ -299,18 +327,11 @@ api-gateway/
 | ----------------------- | -------------------------------------------- |
 | `npm run dev`           | Start the development server with hot reload |
 | `npm run build`         | Build the production bundle                  |
-| `npm run dev:prod`      | Run production build with nodemon            |
 | `npm start`             | Start the production server                  |
-| `npm run swagger`       | Generate Swagger documentation               |
 | `npm test`              | Run the test suite                           |
-| `npm run test:watch`    | Run tests in watch mode                      |
-| `npm run test:coverage` | Run tests with coverage report               |
 | `npm run lint`          | Check code for linting errors                |
-| `npm run lint:fix`      | Fix linting errors automatically             |
 | `npm run format`        | Check code formatting                        |
-| `npm run format:fix`    | Fix formatting issues automatically          |
-| `npm run migrate:dev`   | Run database migrations in development       |
-| `npm run migrate:prod`  | Run database migrations in production        |
+
 
 </details>
 
@@ -320,96 +341,22 @@ api-gateway/
 <summary><b>🔐 Security Implementation</b></summary>
 <br/>
 
-- **JWT Authentication**: Secure token-based authentication with refresh token rotation
-- **Password Security**: Bcrypt hashing with appropriate salt rounds
 - **Rate Limiting**: Protection against brute force attacks
 - **Data Validation**: Joi schemas for request validation
 - **HTTP Security Headers**: Using Helmet middleware
-- **Cookie Security**: HTTP-only, secure cookies with proper domain and path settings
 - **MongoDB Sanitization**: Protection against NoSQL injection
 - **XSS Protection**: Sanitization of user input
 
 </details>
 
-## 🧪 Testing
-
-<details>
-<summary><b>🧠 Test Commands</b></summary>
-<br/>
-
-Run all tests:
-
-```bash
-npm test
-```
-
-Run tests in watch mode:
-
-```bash
-npm run test:watch
-```
-
-Generate test coverage report:
-
-```bash
-npm run test:coverage
-```
-
-</details>
-
-## 🔄 API Endpoints
-
-<details>
-<summary><b>🔑 Authentication Routes</b></summary>
-<br/>
-
-- `POST /api/v1/auth/register` - Register new user
-- `PUT /api/v1/auth/confirmation/:token` - Confirm user account
-- `POST /api/v1/auth/login` - Login user
-- `PUT /api/v1/auth/logout` - Logout user
-- `POST /api/v1/auth/refresh-token` - Generate new access token
-- `PUT /api/v1/auth/forgot-password` - Request password reset
-- `PUT /api/v1/auth/reset-password/:token` - Reset password
-- `PUT /api/v1/auth/change-password` - Change password (authenticated)
-
-</details>
-
-<details>
-<summary><b>🩺 Health Routes</b></summary>
-<br/>
-
-- `GET /api/v1/health` - Check API health
-- `GET /api/v1/health/db` - Check database connection
-- `GET /api/v1/health/redis` - Check Redis connection
-
-</details>
-
-## 🤝 Contributing
-
-<details>
-<summary><b>📜 Contribution Guidelines</b></summary>
-<br/>
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-</details>
-
-## 📄 License
-
-This project is licensed under the ISC License - see the LICENSE file for details.
 
 ---
 
-<div align="center">
+## 🚧 Further Improvements
 
-### ⭐ Star this repository if you find it useful! ⭐
+- Implement job prioritization if needed
+- Implement a mechanism to handle job duplicates
+- Tune BullMQ worker concurrency and rate limiting based on vendor capabilities
+- Improve Prometheus metrics collection and dashboarding (current setup has limited charts; more custom metrics and Grafana dashboards can be added)
+- Integrate Loki for centralized log aggregation and visualization alongside Grafana
 
-Created with ❤️ by [Harmeet Singh](https://github.com/yourusername)
-
-<a href="#top">⬆️ Back to top ⬆️</a>
-
-</div>
