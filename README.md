@@ -348,3 +348,4 @@ api-gateway/
 - Tune BullMQ worker concurrency and rate limiting based on vendor capabilities
 - Improve Prometheus metrics collection and dashboarding (current setup has limited charts; more custom metrics and Grafana dashboards can be added)
 - Integrate Loki for centralized log aggregation and visualization alongside Grafana
+- Improve webhook implementation: handle different event types, robust error handling, and define clear failure scenarios for incoming webhooks
